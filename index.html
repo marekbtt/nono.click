@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/25a633da51.js" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        table#game { width: 500px; height: 500px; font-family:Arial, Helvetica, sans-serif;}
+        td.td { border: 1px solid #e0e0e0; cursor: pointer; font-family:monospace;}
+        td:hover { background-color: #e0e0e0;}
+        td.th { color: gray; font-size: 0.9em;}
+        td.td_r_1 { border-top: 2px solid black !important; }
+        td.td_r_5 { border-bottom: 2px solid black !important; }
+        td.td_c_1 { border-left: 2px solid black !important; }
+        td.td_c_5 { border-right: 2px solid black !important; }
+        td.full { background-color: silver; }
+    </style>    
+    
+    <script src="nono.js"></script>
+
+    <title>Nonogram</title>
+  </head>
+  <body>
+
+    <div class="card border-0 m-2 mx-auto text-center" id="title" style="width: 500px;">
+            <h3>no<sub>no</sub>.click</h3>
+    </div>
+
+    <div class="card border-0 m-2 mx-auto" id="menu" style="width: 500px;">
+        <div class="btn-group" role="group">
+        <button type="button" class="btn btn-success" onclick="confirmNewGame('veasy')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="10x10<br>20% empty squares revealed">Very Easy</button>
+        <button type="button" class="btn btn-primary" onclick="confirmNewGame('easy')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="10x10<br>no squares revealed">Easy</button>
+        <button type="button" class="btn btn-warning" onclick="confirmNewGame('medium')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="15x15<br>20% empty squares revealed">Medium</button>
+        <button type="button" class="btn btn-danger" onclick="confirmNewGame('hard')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="15x15<br>no squares revealed">Hard</button>
+        <button type="button" class="btn btn-secondary" onclick="confirmResetGame()" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Restart current game">Restart</button>
+        </div>
+    </div>
+
+    <div class="card border-0 m-2 mx-auto text-center" id="stats" style="width: 500px;">
+        <div class="card-body row">
+        <div id="hearts" class="col text-danger pt-2">
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart"></i>
+        </div>
+        <div id="toggle" class="col w-10" style="cursor: pointer;">
+            <i class="fas fa-square fa-2x" onclick="setCursor('full');" id="cursorSquare"></i>&nbsp;&nbsp;
+            <i class="fas fa-times fa-2x" onclick="setCursor('empty');"  id="cursorEmpty"style="color: #e0e0e0;"></i>&nbsp;&nbsp;
+            <i class="fas fa-lightbulb fa-2x" onclick="setCursor('hint');" id="cursorHint" style="color: #e0e0e0;"></i>
+        </div>
+        <div id="hints" class="col text-warning pt-2">
+            <i class="fas fa-lightbulb"></i>
+            <i class="fas fa-lightbulb"></i>
+            <i class="fas fa-lightbulb"></i>
+        </div>
+    </div>
+        <!--
+            heart style=solid - full
+
+            question-circle style=solid
+            lightbulb style=regular
+
+            times style=solid
+        -->
+    </div>
+
+    <div class="card m-2 mx-auto" id="game" style="width: 500px; border: 0px solid gray !important;"></div>
+
+    <div class="card border-0 m-5 mx-auto" id="shields" style="width: 500px;">
+        <p class="text-center">
+            <a href="https://github.com/marekbtt/nono.click"><i class="fab fa-github fa-2x"></i></a><br>
+        <!--
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <img src="https://img.shields.io/github/license/marekbtt/nono.click">
+            <img src="https://img.shields.io/github/last-commit/marekbtt/nono.click/master">
+            <img src="https://img.shields.io/badge/-JS-yellow?logo=javascript" alt="">
+            <img src="https://img.shields.io/badge/-PERL5-blue?logo=perl" alt="">
+            <img src="https://img.shields.io/badge/-B4-blueviolet?logo=bootstrap" alt="">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="47HCDLP6HRGSL" />
+            <input type="image" src="https://img.shields.io/badge/PayPal-Donate-blue" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        </form>
+        -->
+        </p>
+    </div>
+
+    <button type="button" class="btn btn-warning" onclick="removeHint();">remove hint</button>
+    <button type="button" class="btn btn-danger" onclick="removeHeart();">remove heart</button>
+    <button type="button" class="btn btn-danger" onclick="gameOver();">game over</button>
+
+    <!-- Optional JavaScript -->
+    <script type="text/javascript">
+        newGameWrapper('easy', 0);
+    </script>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(function () { $('[data-toggle="tooltip"]').tooltip() }) // enable Bootstrap tooltips
+    </script>
+</body>
+</html>
