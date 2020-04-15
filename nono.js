@@ -21,8 +21,12 @@ var colsOrig = [];
 var rowsOrig = [];
 
 // max number of 'full' sequences in rows and cols
-var maxRowSeq = 3;
-var maxColSeq = 3;
+var maxRowSeq = 5;
+var maxColSeq = 5;
+
+// above trashold easify function will be applies once
+var numRowSeqTreshold = 3;
+var numColSeqTreshold = 3;
 
 function confirmNewGame(mode){
     var r = confirm("Are you sure you want to generate new game?");
@@ -126,14 +130,80 @@ function createGameState(){
             gameArr[row+'-'+col] = state;
         }
     }
+    reduceRows();
+    reduceCols();
     gameArrOrig = deepCopyObj(gameArr);
 }
 
-function checkMaxRowSeq(){
-    // foreach row if num of sequences > maxRowSeq randomly change one empty to full and recalculate
+//#####################
+
+function getRandomInt(min, max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function checkMaxColSeq(){
+function getSeq(currRow){
+    seqNum = 0;
+    currCell = '';
+    prevCell = '';
+    for (i = 0; i < currRow.length; i++) { 
+        if ( currRow[i] == 'full' && currRow[i] != prevCell ){
+            seqNum ++;
+        }
+        prevCell = currRow[i];
+    }
+    return seqNum;
+}
+
+function reduceRows(){
+    console.log('function:reduceRows');
+    currRow = [];
+    for ( var row = 1; row <= side; row++ ){
+        currRow = [];
+        for ( var col = 1; col <= side; col++ ){
+            currRow.push(gameArr[row+'-'+col]);
+        }
+        console.log('row:'+row);
+        console.log(currRow);
+
+        // reduce number of sequences to max 5
+        var seqNum = getSeq(currRow);
+        while ( seqNum >= 4 ){
+            console.log('sequences:'+seqNum);
+            var rnd = getRandomInt(0, 9);
+            if ( currRow[rnd] == 'empty' ){
+                console.log('found empty one:'+rnd);
+                gameArr[row+'-'+(rnd+1)] = 'full';
+                currRow[rnd] = 'full';
+            }
+            seqNum = getSeq(currRow);
+            console.log('sequences after reduce:'+seqNum);
+        }
+
+        // run it one more time if there are >= 3 sequences
+        if ( seqNum >= 3 ){
+            console.log('still more than 3 sequences:'+seqNum);
+            while (1){
+                var rnd = getRandomInt(0, 9);
+                console.log('rnd:'+rnd);
+                if ( currRow[rnd] == 'empty' ){
+                    console.log('found empty one:'+rnd);
+                    gameArr[row+'-'+(rnd+1)] = 'full';
+                    currRow[rnd] = 'full';
+                    break;
+                } 
+            }
+        }
+        console.log(currRow);
+        seqNum = getSeq(currRow);
+        console.log('sequences:'+seqNum);
+        seqNum = 0;
+        console.log('*************************************');
+    }
+}
+
+function reduceCols(){
 
 }
 
@@ -313,10 +383,6 @@ function newGame(){
 
     countRows(rows);
     countCols(cols);
-
-    // max number of 'full' sequences in rows / cols
-    checkMaxRowSeq(maxRowSeq);
-    checkMaxColSeq(maxColSeq);
 
     // create game table HTML
     var out = "<table id=\"game\">\n<tbody>\n";
