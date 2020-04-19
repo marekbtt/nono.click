@@ -50,12 +50,12 @@ function confirmResetGame(){
 
 function countRows(){
     rows = [];
-    for ( var row = 1; row <= side; row++ ){
+    for (var row = 1; row <= side; row++){
         var rowInfo = [];
         var c = 0;
-        for ( var col = 1; col <= side; col++ ){
+        for (var col = 1; col <= side; col++){
 
-            if ( col == 1 ){
+            if (col == 1){
                 var previous = gameArr[row+'-'+col];
                 var current = previous;
             }
@@ -63,18 +63,18 @@ function countRows(){
                 var current = gameArr[row+'-'+col];
             }
 
-            if ( current == previous ){
+            if (current == previous){
                 c++;
-                if ( col == side && current == 'full' ){
+                if (col == side && current == 'full'){
                     rowInfo.push(c);
                 }
             }
             else {
-                if ( previous == 'full' ){
+                if (previous == 'full'){
                     rowInfo.push(c);
                 }
                 c = 1;
-                if ( col == side && current == 'full' ){
+                if (col == side && current == 'full'){
                     rowInfo.push(c);
                 }
             }
@@ -87,13 +87,13 @@ function countRows(){
 
 function countCols(){
     cols = [];
-    for ( var col = 1; col <= side; col++ ){
+    for (var col = 1; col <= side; col++){
         var colInfo = [];
         var c = 0;
 
-        for ( var row = 1; row <= side; row++ ){
+        for (var row = 1; row <= side; row++){
 
-            if ( row == 1 ){
+            if (row == 1){
                 var previous = gameArr[row+'-'+col];
                 var current = previous;
             }
@@ -101,18 +101,18 @@ function countCols(){
                 var current = gameArr[row+'-'+col];
             }
 
-            if ( current == previous ){
+            if (current == previous){
                 c++;
-                if ( row == side && current == 'full' ){
+                if (row == side && current == 'full'){
                     colInfo.push(c);
                 }
             }
             else {
-                if ( previous == 'full' ){
+                if (previous == 'full'){
                     colInfo.push(c);
                 }
                 c = 1;
-                if ( row == side && current == 'full' ){
+                if (row == side && current == 'full'){
                     colInfo.push(c);
                 }
             }
@@ -125,9 +125,9 @@ function countCols(){
 
 function createGameState(){
     gameArr = {};
-    for ( var row = 1; row <= side; row++ ){
-        for ( var col = 1; col <= side; col++ ){
-            if ( (Math.floor(Math.random()*10)+1) % 2 == 0 ){
+    for (var row = 1; row <= side; row++){
+        for (var col = 1; col <= side; col++){
+            if ((Math.floor(Math.random()*10)+1) % 2 == 0){
                 var state = 'empty';
             }
             else {
@@ -152,7 +152,7 @@ function getRowSeq(currRow){
     var prevCell = '';
     for (var i = 0; i < currRow.length; i++) {
         var currCell = currRow[i]; 
-        if (  currCell == 'full' && currCell != prevCell ){
+        if (currCell == 'full' && currCell != prevCell){
             seqNum ++;
         }
         prevCell = currCell;
@@ -165,7 +165,7 @@ function getColSeq(currCol){
     var prevCell = '';
     for (var i = 0; i < currCol.length; i++) {
         var currCell = currCol[i]; 
-        if (  currCell == 'full' && currCell != prevCell ){
+        if (currCell == 'full' && currCell != prevCell){
             seqNum ++;
         }
         prevCell = currCell;
@@ -174,17 +174,17 @@ function getColSeq(currCol){
 }
 
 function reduceRows(){
-    for ( var row = 1; row <= side; row++ ){
+    for (var row = 1; row <= side; row++){
         var currRow = [];
-        for ( var col = 1; col <= side; col++ ){
+        for (var col = 1; col <= side; col++){
             currRow.push(gameArr[row+'-'+col]);
         }
 
         // reduce number of sequences to maxRowSeq
         var seqNum = getRowSeq(currRow);
-        while ( seqNum > maxRowSeq ){
+        while (seqNum > maxRowSeq){
             var rnd = getRandomInt(0, (side -1));
-            if ( currRow[rnd] == 'empty' ){
+            if (currRow[rnd] == 'empty'){
                 gameArr[row+'-'+(rnd+1)] = 'full';
                 currRow[rnd] = 'full';
             }
@@ -197,17 +197,17 @@ function reduceRows(){
 }
 
 function reduceCols(){
-    for ( var col = 1; col <= side; col++ ){
+    for (var col = 1; col <= side; col++){
         var currCol = [];
-        for ( var row = 1; row <= side; row++ ){
+        for (var row = 1; row <= side; row++){
             currCol.push(gameArr[row+'-'+col]);
         }
 
         // reduce number of sequences to maxColSeq
         var seqNum = getColSeq(currCol);
-        while ( seqNum > maxColSeq ){
+        while (seqNum > maxColSeq){
             var rnd = getRandomInt(0, (side -1));
-            if ( currCol[rnd] == 'empty' ){
+            if (currCol[rnd] == 'empty'){
                 gameArr[(rnd+1)+'-'+col] = 'full';
                 currCol[rnd] = 'full';
             }
@@ -221,10 +221,10 @@ function reduceCols(){
 
 function gameOver(){
     console.log('Game over :-(');
-    for ( var row = 1; row <= side; row++ ){
-        for ( var col = 1; col <= side; col++ ){
+    for (var row = 1; row <= side; row++){
+        for (var col = 1; col <= side; col++){
             var squareId = row+'-'+col;
-            if ( gameArrOrig[squareId] == 'full' ){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
+            if (gameArrOrig[squareId] == 'full'){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
                 document.getElementById(squareId).classList.add("full");
                 document.getElementById(squareId).innerHTML = '&nbsp;';
             }
@@ -237,10 +237,10 @@ function gameOver(){
 }
 
 function checkSquare(squareId){
-    if ( gameArr[squareId] != '-' ){
-        if ( cursorMode == 'hint' ){
-            if ( currentHints > 0 ){
-                if ( gameArr[squareId] == 'full' ){
+    if (gameArr[squareId] != '-'){
+        if (cursorMode == 'hint'){
+            if (currentHints > 0){
+                if (gameArr[squareId] == 'full'){
                     document.getElementById(squareId).classList.add("full");
                     removeHint();
                     console.log('Hint - full');
@@ -251,11 +251,10 @@ function checkSquare(squareId){
                     console.log('Hint - X');
                 }  
             }
-
         }
         else {
-            if ( gameArr[squareId] == cursorMode ){
-                if ( cursorMode == 'full' ){
+            if (gameArr[squareId] == cursorMode){
+                if (cursorMode == 'full'){
                     document.getElementById(squareId).classList.add("full");
                     console.log('OK - full');
                 }
@@ -266,7 +265,7 @@ function checkSquare(squareId){
                 
             }
             else {
-                if ( gameArr[squareId] == 'full' ){
+                if (gameArr[squareId] == 'full'){
                     document.getElementById(squareId).classList.add("full");
                     removeHeart();
                     console.log('ERROR - full');
@@ -280,35 +279,37 @@ function checkSquare(squareId){
         }
 
     }
-    gameArr[squareId] = '-';
+    else {
+        gameArr[squareId] = '-';
+    }
 }
 
 function removeHeart(){
     currentHearts -= 1;
     heartsOut = '';
-    for ( i = 1; i <= currentHearts; i++ ){
+    for (var i = 1; i <= currentHearts; i++){
         heartsOut += '<i class="fas fa-heart"></i> ';
     }
-    if ( currentHearts != maxHearts ){
-        for ( i = 1; i <= (maxHearts - currentHearts); i++ ){
+    if (currentHearts != maxHearts){
+        for (var i = 1; i <= (maxHearts - currentHearts); i++){
             heartsOut += '<i class="fas fa-times"></i> ';
         }
     }
     document.getElementById('hearts').innerHTML = heartsOut;
-    if ( currentHearts == 0 ){
+    if (currentHearts == 0){
         gameOver();
     }
 }
 
 function removeHint(){
-    if ( currentHints > 0 ){
+    if (currentHints > 0){
        currentHints -= 1;
         hintsOut = '';
-        for ( i = 1; i <= currentHints; i++ ){
+        for (var i = 1; i <= currentHints; i++){
             hintsOut += '<i class="fas fa-lightbulb"></i> ';
         }
-        if ( currentHints != maxHints ){
-            for ( i = 1; i <= (maxHints - currentHints); i++ ){
+        if (currentHints != maxHints){
+            for (var i = 1; i <= (maxHints - currentHints); i++){
                 hintsOut += '<i class="fas fa-times"></i> ';
             }
         }
@@ -317,7 +318,7 @@ function removeHint(){
 }
 
 function setCursor(targetState){
-    if ( targetState == 'empty' ){
+    if (targetState == 'empty'){
         cursorMode = targetState;
         document.getElementById('cursorSquare').style.color='#e0e0e0';
         document.getElementById('cursorEmpty').style.color='black';
@@ -340,7 +341,7 @@ function setCursor(targetState){
 function resetHints(){
     currentHints = maxHints;
     hintsOut = '';
-    for ( i = 1; i <= currentHints; i++ ){
+    for (var i = 1; i <= currentHints; i++){
         hintsOut += '<i class="fas fa-lightbulb"></i> ';
     }
     document.getElementById('hints').innerHTML = hintsOut;     
@@ -349,7 +350,7 @@ function resetHints(){
 function resetHearts(){
     currentHearts = maxHearts;
     heartsOut = '';
-    for ( i = 1; i <= currentHearts; i++ ){
+    for (var i = 1; i <= currentHearts; i++){
         heartsOut += '<i class="fas fa-heart"></i> ';
     }
     document.getElementById('hearts').innerHTML = heartsOut;
@@ -364,7 +365,7 @@ function newGameWrapper(newMode, reset){
     setCursor('full');
     resetHearts();
     resetHints();
-    if ( reset == 1 ){
+    if (reset == 1){
         gameArr = {};
         gameArr = deepCopyObj(gameArrOrig);
         cols = colsOrig;
@@ -372,17 +373,17 @@ function newGameWrapper(newMode, reset){
     }
     else {
         mode = newMode;
-        if ( newMode == 'veasy' ){
+        if (newMode == 'veasy'){
             side = 10;
             maxRowSeq = maxRowSeqV;
             maxColSeq = maxColSeqV;
         }
-        else if ( newMode == 'easy' ){
+        else if (newMode == 'easy'){
             side = 10;
             maxRowSeq = maxRowSeqE;
             maxColSeq = maxColSeqE;
         }
-        else if ( newMode == 'medium' ){
+        else if (newMode == 'medium'){
             side = 15;
             maxRowSeq = maxRowSeqM;
             maxColSeq = maxColSeqM;
@@ -407,36 +408,36 @@ function newGame(){
     // create game table HTML
     var out = "<table id=\"game\">\n<tbody>\n";
 
-    if ( mode == 'veasy' ){
+    if (mode == 'veasy'){
         var bg_class = 'bg-success';
     }
-    else if ( mode == 'easy' ){
+    else if (mode == 'easy'){
         var bg_class = 'bg-primary';
     }
-    else if ( mode == 'medium' ) {
+    else if (mode == 'medium') {
         var bg_class = 'bg-warning';
     }
     else {
         var bg_class = 'bg-danger';
     }
 
-    for ( var row = 0; row <= side; row++ ){
+    for (var row = 0; row <= side; row++){
 
         var td_row_class = '';
 
-        if ( row == 1 ){ td_row_class += 'td_r_1 '; }
-        if ( row % 5 == 0 ){ td_row_class += 'td_r_5 '; }
+        if (row == 1){ td_row_class += 'td_r_1 '; }
+        if (row % 5 == 0){ td_row_class += 'td_r_5 '; }
 
         out += "<tr>\n";
-        if ( row == 0 ){
-            for ( var col = 0; col <= side; col++ ){
+        if (row == 0){
+            for (var col = 0; col <= side; col++){
                 var td_col_class = '';
-                if ( col == 1 ){ td_col_class += 'td_c_1 '; }
-                if ( col % 5 == 0 ){ td_col_class += 'td_c_5 '; }
+                if (col == 1){ td_col_class += 'td_c_1 '; }
+                if (col % 5 == 0){ td_col_class += 'td_c_5 '; }
 
                 td_row_class += 'td_r_1 ';
 
-                if ( col == 0 ){
+                if (col == 0){
                     td_col_class += 'td_c_1 ';
                     out += "<td style=\"width: 110px; height: 100px;\" class=\""+td_row_class+" "+td_col_class+" "+bg_class+" align-middle text-center th\">&nbsp;</td>\n";
                     td_col_class = '';
@@ -451,12 +452,12 @@ function newGame(){
         else {
             var rowHTML = rows[row-1].join('&nbsp;&nbsp');
 
-            for ( var col = 0; col <= side; col++ ){
+            for (var col = 0; col <= side; col++){
 
-                if ( col == 1 || col == 0 ){ td_col_class += 'td_c_1 '; }
-                if ( col % 5 == 0 ){ td_col_class += 'td_c_5 '; }
+                if (col == 1 || col == 0){ td_col_class += 'td_c_1 '; }
+                if (col % 5 == 0){ td_col_class += 'td_c_5 '; }
 
-                if ( col == 0 ){
+                if (col == 0){
                     out += "<td class=\""+td_row_class+" "+td_col_class+" text-right bg-light th\" style=\"width: 110px;\">"+rowHTML+"&nbsp;</td>\n";
                     td_col_class = '';
                 }
