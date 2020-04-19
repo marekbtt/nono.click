@@ -96,7 +96,15 @@
     <button type="button" class="btn btn-danger" onclick="removeHeart();">remove heart</button>
     <button type="button" class="btn btn-danger" onclick="gameOver();">game over</button>
     -->
-    
+
+    <div class="card border-0 m-5 mx-auto" id="changelog" style="width: 500px;">
+        <h3>Changelog</h3>
+        <h6>2020-04-19</h6>
+        <ul>
+            <li>Improved rows and columns, by reducing amount of consequtive "full" sequences to 4 in very easy and easy and 5 in medium and hard. Note: rows might over that number, as they are optimized first, so when optimizing cols it is possible to add new sequences to rows.</li>
+        </ul>
+    </div>
+
     <!-- Optional JavaScript -->
     <script type="text/javascript">
         newGameWrapper('easy', 0);
