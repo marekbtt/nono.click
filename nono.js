@@ -224,7 +224,7 @@ function gameOver(){
     for ( var row = 1; row <= side; row++ ){
         for ( var col = 1; col <= side; col++ ){
             var squareId = row+'-'+col;
-            if ( gameArrOrig[squareId] == 'full' ){
+            if ( gameArrOrig[squareId] == 'full' ){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
                 document.getElementById(squareId).classList.add("full");
                 document.getElementById(squareId).innerHTML = '&nbsp;';
             }
