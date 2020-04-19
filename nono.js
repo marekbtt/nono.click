@@ -24,7 +24,7 @@ var rowsOrig = [];
 var maxRowSeq = 0;
 var maxColSeq = 0;
 
-var maxRowSeqV = 3;
+var maxRowSeqV = 3; // will not always be true, as reduceCols() can add separated squares
 var maxRowSeqE = 4;
 var maxRowSeqM = 4;
 var maxRowSeqH = 5;
@@ -33,6 +33,9 @@ var maxColSeqV = 3;
 var maxColSeqE = 4;
 var maxColSeqM = 4;
 var maxColSeqH = 5;
+
+var veasyReveal = 15;
+var mediumReveal = 30;
 
 function confirmNewGame(mode){
     var r = confirm("Are you sure you want to generate new game?");
@@ -138,7 +141,33 @@ function createGameState(){
     }
     reduceRows();
     reduceCols();
+    revealSquares();
     gameArrOrig = deepCopyObj(gameArr);
+}
+
+function revealSquares(){
+    console.log('--> function revealSquares');
+    var count = 0;
+    if (mode == 'veasy'){  
+        while (count < veasyReveal){
+            var row = getRandomInt(1, side);
+            var col = getRandomInt(1, side);
+            if (gameArr[row+'-'+col] == 'empty'){
+                gameArr[row+'-'+col] = '-';
+                count++;
+            }
+        }
+    }
+    else if (mode == 'medium'){
+        while (count < mediumReveal){
+            var row = getRandomInt(1, side);
+            var col = getRandomInt(1, side);
+            if (gameArr[row+'-'+col] == 'empty'){
+                gameArr[row+'-'+col] = '-';
+                count++;
+            }
+        }
+    }
 }
 
 function getRandomInt(min, max){
@@ -277,7 +306,6 @@ function checkSquare(squareId){
                 }
             }
         }
-
     }
     else {
         gameArr[squareId] = '-';
@@ -401,7 +429,6 @@ function newGameWrapper(newMode, reset){
 }
 
 function newGame(){
-
     countRows(rows);
     countCols(cols);
 
@@ -429,7 +456,7 @@ function newGame(){
         if (row % 5 == 0){ td_row_class += 'td_r_5 '; }
 
         out += "<tr>\n";
-        if (row == 0){
+        if (row == 0){ // header row
             for (var col = 0; col <= side; col++){
                 var td_col_class = '';
                 if (col == 1){ td_col_class += 'td_c_1 '; }
@@ -457,12 +484,17 @@ function newGame(){
                 if (col == 1 || col == 0){ td_col_class += 'td_c_1 '; }
                 if (col % 5 == 0){ td_col_class += 'td_c_5 '; }
 
-                if (col == 0){
+                if (col == 0){ // header column
                     out += "<td class=\""+td_row_class+" "+td_col_class+" text-right bg-light th\" style=\"width: 110px;\">"+rowHTML+"&nbsp;</td>\n";
                     td_col_class = '';
                 }
                 else {
-                    out += "<td class=\""+td_row_class+" "+td_col_class+" td align-middle text-center\" id=\""+row+"-"+col+"\" onclick=\"checkSquare('"+row+"-"+col+"');\">&nbsp;&nbsp;</td>\n";
+                    if (gameArr[row+'-'+col] == '-'){
+                        out += "<td class=\""+td_row_class+" "+td_col_class+" td align-middle text-center\" id=\""+row+"-"+col+"\">X</td>\n";
+                    }
+                    else {
+                        out += "<td class=\""+td_row_class+" "+td_col_class+" td align-middle text-center\" id=\""+row+"-"+col+"\" onclick=\"checkSquare('"+row+"-"+col+"');\">&nbsp;&nbsp;</td>\n";
+                    }
                     td_col_class = '';
                 }
             }
