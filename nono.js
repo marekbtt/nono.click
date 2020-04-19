@@ -21,12 +21,18 @@ var colsOrig = [];
 var rowsOrig = [];
 
 // max number of 'full' sequences in rows and cols
-var maxRowSeq = 5;
-var maxColSeq = 5;
+var maxRowSeq = 0;
+var maxColSeq = 0;
 
-// above trashold easify function will be applies once
-var numRowSeqTreshold = 3;
-var numColSeqTreshold = 3;
+var maxRowSeqV = 3;
+var maxRowSeqE = 4;
+var maxRowSeqM = 4;
+var maxRowSeqH = 5;
+
+var maxColSeqV = 3;
+var maxColSeqE = 4;
+var maxColSeqM = 4;
+var maxColSeqH = 5;
 
 function confirmNewGame(mode){
     var r = confirm("Are you sure you want to generate new game?");
@@ -119,8 +125,8 @@ function countCols(){
 
 function createGameState(){
     gameArr = {};
-    for ( var row = 0; row <= side; row++ ){
-        for ( var col = 0; col <= side; col++ ){
+    for ( var row = 1; row <= side; row++ ){
+        for ( var col = 1; col <= side; col++ ){
             if ( (Math.floor(Math.random()*10)+1) % 2 == 0 ){
                 var state = 'empty';
             }
@@ -135,76 +141,113 @@ function createGameState(){
     gameArrOrig = deepCopyObj(gameArr);
 }
 
-//#####################
-
 function getRandomInt(min, max){
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getSeq(currRow){
+function getRowSeq(currRow){
+    console.log(":: start getRowlSeq");
     seqNum = 0;
-    currCell = '';
-    prevCell = '';
-    for (i = 0; i < currRow.length; i++) { 
-        if ( currRow[i] == 'full' && currRow[i] != prevCell ){
+    var prevCell = '';
+    for (var i = 0; i < currRow.length; i++) {
+        var currCell = currRow[i]; 
+        //console.log("col:"+i+"  prev:"+prevCell+"  curr:"+currCell);
+        if (  currCell == 'full' && currCell != prevCell ){
             seqNum ++;
+            //console.log("rows seqNum++:"+seqNum);
         }
-        prevCell = currRow[i];
+        prevCell = currCell;
     }
+    //console.log("row sequences:"+seqNum);
+    console.log(":: end getRowSeq");
+    return seqNum;
+}
+
+function getColSeq(currCol){
+    console.log(":: start getColSeq");
+    seqNum = 0;
+    var prevCell = '';
+    for (var i = 0; i < currCol.length; i++) {
+        var currCell = currCol[i]; 
+        console.log("row:"+i+"  prev:"+prevCell+"  curr:"+currCell);
+        if (  currCell == 'full' && currCell != prevCell ){
+            seqNum ++;
+            console.log("cols seqNum++:"+seqNum);
+        }
+        prevCell = currCell;
+    }
+    console.log("column sequences:"+seqNum);
+    console.log(":: end getColSeq");
     return seqNum;
 }
 
 function reduceRows(){
-    console.log('function:reduceRows');
-    currRow = [];
+    console.log('======> function:reduceRows');
+    console.log(gameArr);
     for ( var row = 1; row <= side; row++ ){
-        currRow = [];
+        var currRow = [];
+        console.log('--> row:'+row);
         for ( var col = 1; col <= side; col++ ){
             currRow.push(gameArr[row+'-'+col]);
+            console.log("push "+row+'-'+col+'  : '+gameArr[row+'-'+col]);
         }
-        console.log('row:'+row);
         console.log(currRow);
 
-        // reduce number of sequences to max 5
-        var seqNum = getSeq(currRow);
-        while ( seqNum >= 4 ){
-            console.log('sequences:'+seqNum);
-            var rnd = getRandomInt(0, 9);
+        // reduce number of sequences to maxRowSeq
+        var seqNum = getRowSeq(currRow);
+        while ( seqNum > maxRowSeq ){
+            console.log('more than '+maxRowSeq+' seq, reducing:'+seqNum);
+            var rnd = getRandomInt(0, (side -1));
             if ( currRow[rnd] == 'empty' ){
-                console.log('found empty one:'+rnd);
+                console.log('found empty one:'+rnd+":"+currRow[rnd]);
                 gameArr[row+'-'+(rnd+1)] = 'full';
                 currRow[rnd] = 'full';
             }
-            seqNum = getSeq(currRow);
+            seqNum = getRowSeq(currRow);
             console.log('sequences after reduce:'+seqNum);
         }
 
-        // run it one more time if there are >= 3 sequences
-        if ( seqNum >= 3 ){
-            console.log('still more than 3 sequences:'+seqNum);
-            while (1){
-                var rnd = getRandomInt(0, 9);
-                console.log('rnd:'+rnd);
-                if ( currRow[rnd] == 'empty' ){
-                    console.log('found empty one:'+rnd);
-                    gameArr[row+'-'+(rnd+1)] = 'full';
-                    currRow[rnd] = 'full';
-                    break;
-                } 
-            }
-        }
         console.log(currRow);
-        seqNum = getSeq(currRow);
-        console.log('sequences:'+seqNum);
+        seqNum = getRowSeq(currRow);
+        console.log('sequences at the end:'+seqNum);
         seqNum = 0;
         console.log('*************************************');
     }
 }
 
 function reduceCols(){
+    console.log('function:reduceCols');
+    for ( var col = 1; col <= side; col++ ){
+        var currCol = [];
+        console.log('--> col:'+col);
+        for ( var row = 1; row <= side; row++ ){
+            currCol.push(gameArr[row+'-'+col]);
+            console.log("push "+row+'-'+col+'  : '+gameArr[row+'-'+col]);
+        }
+        console.log(currCol);
 
+        // reduce number of sequences to maxColSeq
+        var seqNum = getColSeq(currCol);
+        while ( seqNum > maxColSeq ){
+            console.log('more than '+maxColSeq+' seq, reducing:'+seqNum);
+            var rnd = getRandomInt(0, (side -1));
+            if ( currCol[rnd] == 'empty' ){
+                console.log('found empty one:'+rnd+":"+currCol[rnd]);
+                gameArr[(rnd+1)+'-'+col] = 'full';
+                currCol[rnd] = 'full';
+            }
+            seqNum = getColSeq(currCol);
+            console.log('sequences after reduce:'+seqNum);
+        }
+
+        console.log(currCol);
+        seqNum = getColSeq(currCol);
+        console.log('sequences at the end:'+seqNum);
+        seqNum = 0;
+        console.log('*************************************');
+    }
 }
 
 function gameOver(){
@@ -348,33 +391,41 @@ function deepCopyObj(sourceObj){
 }
 
 function newGameWrapper(newMode, reset){
+    console.clear();
+    setCursor('full');
+    resetHearts();
+    resetHints();
     if ( reset == 1 ){
         gameArr = {};
-        console.log(gameArr);
-        console.log(gameArrOrig);
         gameArr = deepCopyObj(gameArrOrig);
         cols = colsOrig;
         rows = rowsOrig;
-        setCursor('full');
-        resetHearts();
-        resetHints();
     }
     else {
         mode = newMode;
         if ( newMode == 'veasy' ){
             side = 10;
+            maxRowSeq = maxRowSeqV;
+            maxColSeq = maxColSeqV;
         }
         else if ( newMode == 'easy' ){
             side = 10;
+            maxRowSeq = maxRowSeqE;
+            maxColSeq = maxColSeqE;
         }
         else if ( newMode == 'medium' ){
             side = 15;
+            maxRowSeq = maxRowSeqM;
+            maxColSeq = maxColSeqM;
         }
         else {
             side = 15;
+            maxRowSeq = maxRowSeqH;
+            maxColSeq = maxColSeqH;
         }
         // create gameArr
         createGameState();
+        console.log(gameArr);
     }
     newGame();
 }
