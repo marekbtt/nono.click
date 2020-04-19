@@ -35,11 +35,11 @@
 
     <div class="card border-0 m-2 mx-auto" id="menu" style="width: 500px;">
         <div class="btn-group" role="group">
-        <button type="button" class="btn btn-success" onclick="confirmNewGame('veasy')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="10x10<br>20% empty squares revealed">Very Easy</button>
-        <button type="button" class="btn btn-primary" onclick="confirmNewGame('easy')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="10x10<br>no squares revealed">Easy</button>
-        <button type="button" class="btn btn-warning" onclick="confirmNewGame('medium')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="15x15<br>20% empty squares revealed">Medium</button>
-        <button type="button" class="btn btn-danger" onclick="confirmNewGame('hard')" data-toggle="tooltip" data-placement="bottom" data-html="true" title="15x15<br>no squares revealed">Hard</button>
-        <button type="button" class="btn btn-secondary" onclick="confirmResetGame()" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Restart current game">Restart</button>
+        <button type="button" class="btn btn-success" onclick="confirmNewGame('veasy')" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" title="10x10<br>20% empty squares revealed">Very Easy</button>
+        <button type="button" class="btn btn-primary" onclick="confirmNewGame('easy')" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" title="10x10<br>no squares revealed">Easy</button>
+        <button type="button" class="btn btn-warning" onclick="confirmNewGame('medium')" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" title="15x15<br>20% empty squares revealed">Medium</button>
+        <button type="button" class="btn btn-danger" onclick="confirmNewGame('hard')" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" title="15x15<br>no squares revealed">Hard</button>
+        <button type="button" class="btn btn-secondary" onclick="confirmResetGame()" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" title="Restart current game">Restart</button>
         </div>
     </div>
 
@@ -97,12 +97,29 @@
     <button type="button" class="btn btn-danger" onclick="gameOver();">game over</button>
     -->
 
-    <div class="card border-0 m-5 mx-auto" id="changelog" style="width: 500px;">
-        <h3>Changelog</h3>
+    <div class="card border-0 m-5 mx-auto text-muted" id="known" style="width: 500px;">
+        <h4>Known issues</h4>
+        <small>
+        See <a href="https://github.com/marekbtt/nono.click/issues">issues on GitHub</a><br>
+        Most notable:
+        <ul>
+            <li>no Game solved/won info</li>
+            <li>no indication (apart from hearts vanishing) whether guess was correct or not</li>
+            <li>no indication that row/column is solved</li>
+            <li>tooltips for new game buttons stay on</li>
+            <li>errors in how table is revealed in case of game lost</li>
+        </ul>
+        </small>
+    </div>
+
+    <div class="card border-0 m-5 mx-auto text-muted" id="changelog" style="width: 500px;">
+        <h4>Changelog</h4>
         <h6>2020-04-19</h6>
+        <small>
         <ul>
             <li>Improved rows and columns, by reducing amount of consequtive "full" sequences to 4 in very easy and easy and 5 in medium and hard. Note: rows might over that number, as they are optimized first, so when optimizing cols it is possible to add new sequences to rows.</li>
         </ul>
+        </small>
     </div>
 
     <!-- Optional JavaScript -->
