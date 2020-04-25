@@ -2,6 +2,8 @@
 var gameArr = {};
 var gameArrOrig = {};
 
+var allFull = 0;
+
 var mode = '';
 
 var side = '';
@@ -14,7 +16,7 @@ var currentHints = maxHints;
 
 var cursorMode = 'full';
 
-var rows = []; 
+var rows = [];
 var cols = [];
 
 var colsOrig = [];
@@ -142,13 +144,24 @@ function createGameState(){
     reduceRows();
     reduceCols();
     revealSquares();
+    countAllFull();
     gameArrOrig = deepCopyObj(gameArr);
 }
 
+function countAllFull(){
+    for (var key in gameArr) {
+        if (gameArr[key] == 'full'){
+            allFull++;
+        }
+    }
+    console.log('countAllFull() - finished counting: ' + allFull);
+};
+
 function revealSquares(){
+    // TODO: add check if there is enough empty squares to reveal, otherwise function will go into infinite loop
     console.log('--> function revealSquares');
     var count = 0;
-    if (mode == 'veasy'){  
+    if (mode == 'veasy'){
         while (count < veasyReveal){
             var row = getRandomInt(1, side);
             var col = getRandomInt(1, side);
@@ -180,7 +193,7 @@ function getRowSeq(currRow){
     seqNum = 0;
     var prevCell = '';
     for (var i = 0; i < currRow.length; i++) {
-        var currCell = currRow[i]; 
+        var currCell = currRow[i];
         if (currCell == 'full' && currCell != prevCell){
             seqNum ++;
         }
@@ -193,7 +206,7 @@ function getColSeq(currCol){
     seqNum = 0;
     var prevCell = '';
     for (var i = 0; i < currCol.length; i++) {
-        var currCell = currCol[i]; 
+        var currCell = currCol[i];
         if (currCell == 'full' && currCell != prevCell){
             seqNum ++;
         }
@@ -219,7 +232,6 @@ function reduceRows(){
             }
             seqNum = getRowSeq(currRow);
         }
-
         seqNum = getRowSeq(currRow);
         seqNum = 0;
     }
@@ -242,15 +254,78 @@ function reduceCols(){
             }
             seqNum = getColSeq(currCol);
         }
-
         seqNum = getColSeq(currCol);
         seqNum = 0;
     }
 }
 
+function checkSquare(squareId){
+    if (gameArr[squareId] != '-'){
+        if (cursorMode == 'hint'){
+            if (currentHints > 0){
+                if (gameArr[squareId] == 'full'){
+                    document.getElementById(squareId).classList.add("full");
+                    removeHint();
+                    allFull--;
+                    console.log('allFull--: ' + allFull);
+                    console.log('Hint - full');
+                }
+                else {
+                    document.getElementById(squareId).innerHTML = 'X';
+                    removeHint();
+                    console.log('Hint - X');
+                }
+            }
+        }
+        else {
+            if (gameArr[squareId] == cursorMode){
+                if (cursorMode == 'full'){
+                    document.getElementById(squareId).classList.add("full");
+                    allFull--;
+                    console.log('allFull--: ' + allFull);
+                    console.log('OK - full');
+                }
+                else {
+                    document.getElementById(squareId).innerHTML = 'X';
+                    console.log('OK - X');
+                }
+
+            }
+            else {
+                if (gameArr[squareId] == 'full'){
+                    document.getElementById(squareId).classList.add("full");
+                    allFull--;
+                    console.log('allFull--: ' + allFull);
+                    console.log('ERROR - full');
+                    removeHeart();
+                }
+                else {
+                        document.getElementById(squareId).innerHTML = 'X';
+                        console.log('ERROR - X');
+                        removeHeart();
+                }
+            }
+        }
+        if (allFull == 0 && currentHearts > 0){
+            gameWon();
+        }
+    }
+}
+
+function gameWon(){
+    console.log('GAME WON !!!!');
+    // TODO: add some UI info
+    revealBoard();
+}
+
 function gameOver(){
     console.log('Game over :-(');
-    for (var row = 1; row <= side; row++){
+    // TODO: add some UI info
+    revealBoard();
+}
+
+function revealBoard(){
+    for (var row = 1; row <= side; row++){ // TODO: should change it to for (key in gameArr){}...
         for (var col = 1; col <= side; col++){
             var squareId = row+'-'+col;
             if (gameArrOrig[squareId] == 'full'){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
@@ -262,53 +337,6 @@ function gameOver(){
             }
             gameArr[squareId] = '-';
         }
-    }
-}
-
-function checkSquare(squareId){
-    if (gameArr[squareId] != '-'){
-        if (cursorMode == 'hint'){
-            if (currentHints > 0){
-                if (gameArr[squareId] == 'full'){
-                    document.getElementById(squareId).classList.add("full");
-                    removeHint();
-                    console.log('Hint - full');
-                }
-                else {
-                    document.getElementById(squareId).innerHTML = 'X';
-                    removeHint();
-                    console.log('Hint - X');
-                }  
-            }
-        }
-        else {
-            if (gameArr[squareId] == cursorMode){
-                if (cursorMode == 'full'){
-                    document.getElementById(squareId).classList.add("full");
-                    console.log('OK - full');
-                }
-                else {
-                    document.getElementById(squareId).innerHTML = 'X';
-                    console.log('OK - X');
-                }
-                
-            }
-            else {
-                if (gameArr[squareId] == 'full'){
-                    document.getElementById(squareId).classList.add("full");
-                    removeHeart();
-                    console.log('ERROR - full');
-                }
-                else {
-                        document.getElementById(squareId).innerHTML = 'X';
-                        removeHeart();
-                        console.log('ERROR - X');
-                }
-            }
-        }
-    }
-    else {
-        gameArr[squareId] = '-';
     }
 }
 
@@ -341,7 +369,7 @@ function removeHint(){
                 hintsOut += '<i class="fas fa-times"></i> ';
             }
         }
-        document.getElementById('hints').innerHTML = hintsOut;     
+        document.getElementById('hints').innerHTML = hintsOut;
     }
 }
 
@@ -372,7 +400,7 @@ function resetHints(){
     for (var i = 1; i <= currentHints; i++){
         hintsOut += '<i class="fas fa-lightbulb"></i> ';
     }
-    document.getElementById('hints').innerHTML = hintsOut;     
+    document.getElementById('hints').innerHTML = hintsOut;
 }
 
 function resetHearts(){
@@ -393,6 +421,7 @@ function newGameWrapper(newMode, reset){
     setCursor('full');
     resetHearts();
     resetHints();
+    allFull = 0;
     if (reset == 1){
         gameArr = {};
         gameArr = deepCopyObj(gameArrOrig);
@@ -449,7 +478,6 @@ function newGame(){
     }
 
     for (var row = 0; row <= side; row++){
-
         var td_row_class = '';
 
         if (row == 1){ td_row_class += 'td_r_1 '; }
@@ -459,6 +487,7 @@ function newGame(){
         if (row == 0){ // header row
             for (var col = 0; col <= side; col++){
                 var td_col_class = '';
+
                 if (col == 1){ td_col_class += 'td_c_1 '; }
                 if (col % 5 == 0){ td_col_class += 'td_c_5 '; }
 
