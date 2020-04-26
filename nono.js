@@ -36,8 +36,8 @@ var maxColSeqE = 4;
 var maxColSeqM = 4;
 var maxColSeqH = 5;
 
-var veasyReveal = 15;
-var mediumReveal = 30;
+var veasyReveal = 20;
+var mediumReveal = 40;
 
 function confirmNewGame(mode){
     var r = confirm("Are you sure you want to generate new game?");
@@ -259,6 +259,10 @@ function reduceCols(){
     }
 }
 
+function updateSquaresLeft(){
+    document.getElementById('allFull').innerHTML = allFull;
+}
+
 function checkSquare(squareId){
     if (gameArr[squareId] != '-'){
         if (cursorMode == 'hint'){
@@ -267,6 +271,7 @@ function checkSquare(squareId){
                     document.getElementById(squareId).classList.add("full");
                     removeHint();
                     allFull--;
+                    updateSquaresLeft();
                     console.log('allFull--: ' + allFull);
                     console.log('Hint - full');
                     flashColor(squareId, '#ffc107');
@@ -284,6 +289,7 @@ function checkSquare(squareId){
                 if (cursorMode == 'full'){
                     document.getElementById(squareId).classList.add("full");
                     allFull--;
+                    updateSquaresLeft();
                     console.log('allFull--: ' + allFull);
                     console.log('OK - full');
                     flashColor(squareId, '#28a745');
@@ -299,6 +305,7 @@ function checkSquare(squareId){
                 if (gameArr[squareId] == 'full'){
                     document.getElementById(squareId).classList.add("full");
                     allFull--;
+                    updateSquaresLeft();
                     console.log('allFull--: ' + allFull);
                     console.log('ERROR - full');
                     flashColor(squareId, '#dc3545');
@@ -563,6 +570,7 @@ function newGame(){
         out += "</tr>";
     }
     out += "</tbody>\n</table>\n";
+    out += '<p class="text-muted "><small>Squares left: <span id="allFull">' + allFull + '</span></small></p>';
 
     document.getElementById('game').innerHTML = out;
 }
