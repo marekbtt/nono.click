@@ -269,11 +269,13 @@ function checkSquare(squareId){
                     allFull--;
                     console.log('allFull--: ' + allFull);
                     console.log('Hint - full');
+                    flashColor(squareId, '#ffc107');
                 }
                 else {
                     document.getElementById(squareId).innerHTML = 'X';
                     removeHint();
                     console.log('Hint - X');
+                    flashColor(squareId, '#ffc107');
                 }
             }
         }
@@ -284,10 +286,12 @@ function checkSquare(squareId){
                     allFull--;
                     console.log('allFull--: ' + allFull);
                     console.log('OK - full');
+                    flashColor(squareId, '#28a745');
                 }
                 else {
                     document.getElementById(squareId).innerHTML = 'X';
                     console.log('OK - X');
+                    flashColor(squareId, '#28a745');
                 }
 
             }
@@ -297,22 +301,33 @@ function checkSquare(squareId){
                     allFull--;
                     console.log('allFull--: ' + allFull);
                     console.log('ERROR - full');
+                    flashColor(squareId, '#dc3545');
                     removeHeart();
                 }
                 else {
                         document.getElementById(squareId).innerHTML = 'X';
                         console.log('ERROR - X');
+                        flashColor(squareId, '#dc3545');
                         removeHeart();
                 }
             }
         }
         if (allFull == 0 && currentHearts > 0){
-            gameWon();
+            gameSolved();
         }
     }
 }
 
-function gameWon(){
+function flashColor(id, color){
+    var cell = document.getElementById(id);
+    var origColor = cell.style.backgroundColor;
+    cell.style.backgroundColor = color;
+    setTimeout(function(){
+        cell.style.backgroundColor = origColor;
+    }, 200);
+}
+
+function gameSolved(){
     console.log('GAME WON !!!!');
     // TODO: add some UI info
     revealBoard();
