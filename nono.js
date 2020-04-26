@@ -316,6 +316,7 @@ function checkSquare(squareId){
             gameSolved();
         }
     }
+    gameArr[squareId] = '-';
 }
 
 function flashColor(id, color){
