@@ -328,15 +328,31 @@ function flashColor(id, color){
 }
 
 function gameSolved(){
-    console.log('GAME WON !!!!');
-    // TODO: add some UI info
     revealBoard();
+    console.log('Game over :-(');
+    for (var key in gameArrOrig){
+        var cell = document.getElementById(key);
+        if ( gameArrOrig[key] == 'full'){
+            cell.style.backgroundColor = '#28a745';
+        }
+        else {
+            document.getElementById(key).innerHTML = ':)';
+        }
+    }
 }
 
 function gameOver(){
-    console.log('Game over :-(');
-    // TODO: add some UI info
     revealBoard();
+    console.log('Game over :-(');
+    for (var key in gameArrOrig){
+        var cell = document.getElementById(key);
+        if ( gameArrOrig[key] == 'full'){
+            cell.style.backgroundColor = '#dc3545';
+        }
+        else {
+            document.getElementById(key).innerHTML = ':(';
+        }
+    }
 }
 
 function revealBoard(){
