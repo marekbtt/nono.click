@@ -27,9 +27,9 @@ var maxRowSeq = 0;
 var maxColSeq = 0;
 
 var maxRowSeqV = 3; // will not always be true, as reduceCols() can add separated squares
-var maxRowSeqE = 4;
-var maxRowSeqM = 4;
-var maxRowSeqH = 5;
+var maxRowSeqE = 4; // will not always be true, as reduceCols() can add separated squares
+var maxRowSeqM = 4; // will not always be true, as reduceCols() can add separated squares
+var maxRowSeqH = 5; // will not always be true, as reduceCols() can add separated squares
 
 var maxColSeqV = 3;
 var maxColSeqE = 4;
@@ -144,7 +144,6 @@ function createGameState(){
     reduceRows();
     reduceCols();
     revealSquares();
-    countAllFull();
     gameArrOrig = deepCopyObj(gameArr);
 }
 
@@ -493,6 +492,7 @@ function newGameWrapper(newMode, reset){
         createGameState();
         console.log(gameArr);
     }
+    countAllFull();
     newGame();
 }
 
