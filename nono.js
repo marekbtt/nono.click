@@ -40,6 +40,7 @@ var veasyReveal = 20;
 var mediumReveal = 40;
 
 var seconds = 0;
+var gameTimer = '';
 
 function updateTimer(){
     seconds++;
@@ -342,6 +343,7 @@ function flashColor(id, color){
 }
 
 function gameSolved(){
+    window.clearInterval(gameTimer);
     revealBoard();
     console.log('Game over :-(');
     for (var key in gameArrOrig){
@@ -356,6 +358,7 @@ function gameSolved(){
 }
 
 function gameOver(){
+    window.clearInterval(gameTimer);
     revealBoard();
     console.log('Game over :-(');
     for (var key in gameArrOrig){
@@ -501,7 +504,8 @@ function newGameWrapper(newMode, reset){
     }
     countAllFull();
     seconds = 0;
-    setInterval(updateTimer, 1000);
+    window.clearInterval(gameTimer);
+    gameTimer = setInterval(updateTimer, 1000);
     newGame();
 }
 
