@@ -39,6 +39,13 @@ var maxColSeqH = 5;
 var veasyReveal = 20;
 var mediumReveal = 40;
 
+var seconds = 0;
+
+function updateTimer(){
+    seconds++;
+    document.getElementById('timer').innerHTML = new Date(seconds * 1000).toISOString().substr(14, 5);
+}
+
 function confirmNewGame(mode){
     var r = confirm("Are you sure you want to generate new game?");
     if (r == true) {
@@ -493,6 +500,8 @@ function newGameWrapper(newMode, reset){
         console.log(gameArr);
     }
     countAllFull();
+    seconds = 0;
+    setInterval(updateTimer, 1000);
     newGame();
 }
 
@@ -570,7 +579,11 @@ function newGame(){
         out += "</tr>";
     }
     out += "</tbody>\n</table>\n";
-    out += '<p class="text-muted "><small>Squares left: <span id="allFull">' + allFull + '</span></small></p>';
+
+    out += '<div class="row">';
+    out += '<div class="col text-muted"><small>Squares left: <span id="allFull">' + allFull + '</span></small></div>';
+    out += '<div class="col text-muted text-right"><small><span id="timer">' + seconds + '</span></small></div>';
+    out += '</div>';
 
     document.getElementById('game').innerHTML = out;
 }
