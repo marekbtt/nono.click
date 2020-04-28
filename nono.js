@@ -400,10 +400,8 @@ function gameOver(){
 }
 
 function revealBoard(){
-    for (var row = 1; row <= side; row++){ // TODO: should change it to for (key in gameArr){}...
-        for (var col = 1; col <= side; col++){
-            var squareId = row+'-'+col;
-            if (gameArrOrig[squareId] == 'full'){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
+    for (var squareId in gameArrOrig){
+        if (gameArrOrig[squareId] == 'full'){ // can't use gameArr, since value of the revealed full squares is not 'full' anymore
                 document.getElementById(squareId).classList.add("full");
                 document.getElementById(squareId).innerHTML = '&nbsp;';
             }
@@ -411,7 +409,6 @@ function revealBoard(){
                 document.getElementById(squareId).innerHTML = 'X';
             }
             gameArr[squareId] = '-';
-        }
     }
 }
 
