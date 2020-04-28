@@ -335,8 +335,7 @@ function checkSquare(squareId){
 }
 
 function checkRow(squareId){
-    console.log('checkRow');
-    var row = squareId.charAt(0);
+    var row = (squareId.split('-'))[0];
     var fullSquares = 0;
     for (var i = 1; i <= side; i++){
         if (gameArr[row+'-'+i] == 'full'){
@@ -349,16 +348,15 @@ function checkRow(squareId){
 }
 
 function checkColumn(squareId){
-    console.log('checkColumn');
-    var column = squareId.charAt(squareId.length-1);
+    var col = (squareId.split('-'))[1];
     var fullSquares = 0;
     for (var i = 1; i <= side; i++){
-        if (gameArr[i+'-'+column] == 'full'){
+        if (gameArr[i+'-'+col] == 'full'){
             fullSquares++;
         }
     }
     if (fullSquares == 0){
-        document.getElementById('0-'+column).style.color = '#e0e0e0';
+        document.getElementById('0-'+col).style.color = '#e0e0e0';
     }
 }
 
