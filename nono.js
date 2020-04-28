@@ -29,12 +29,12 @@ var maxColSeq = 0;
 var maxRowSeqV = 3; // will not always be true, as reduceCols() can add separated squares
 var maxRowSeqE = 4; // will not always be true, as reduceCols() can add separated squares
 var maxRowSeqM = 4; // will not always be true, as reduceCols() can add separated squares
-var maxRowSeqH = 5; // will not always be true, as reduceCols() can add separated squares
+var maxRowSeqH = 4; // will not always be true, as reduceCols() can add separated squares
 
 var maxColSeqV = 3;
 var maxColSeqE = 4;
 var maxColSeqM = 4;
-var maxColSeqH = 5;
+var maxColSeqH = 4;
 
 var veasyReveal = 20;
 var mediumReveal = 40;
@@ -239,7 +239,6 @@ function reduceRows(){
             }
             seqNum = getRowSeq(currRow);
         }
-        seqNum = getRowSeq(currRow);
         seqNum = 0;
     }
 }
@@ -331,6 +330,36 @@ function checkSquare(squareId){
         }
     }
     gameArr[squareId] = '-';
+    checkRow(squareId);
+    checkColumn(squareId);
+}
+
+function checkRow(squareId){
+    console.log('checkRow');
+    var row = squareId.charAt(0);
+    var fullSquares = 0;
+    for (var i = 1; i <= side; i++){
+        if (gameArr[row+'-'+i] == 'full'){
+            fullSquares++;
+        }
+    }
+    if (fullSquares == 0){
+        document.getElementById(row+'-0').style.color = '#e0e0e0';
+    }
+}
+
+function checkColumn(squareId){
+    console.log('checkColumn');
+    var column = squareId.charAt(squareId.length-1);
+    var fullSquares = 0;
+    for (var i = 1; i <= side; i++){
+        if (gameArr[i+'-'+column] == 'full'){
+            fullSquares++;
+        }
+    }
+    if (fullSquares == 0){
+        document.getElementById('0-'+column).style.color = '#e0e0e0';
+    }
 }
 
 function flashColor(id, color){
@@ -552,7 +581,7 @@ function newGame(){
                 }
                 else {
                     var colHTML = cols[col-1].join('<br>');
-                    out += "<td class=\""+td_row_class+" "+td_col_class+" align-bottom text-center bg-light th\">"+colHTML+"</td>\n";
+                    out += "<td class=\""+td_row_class+" "+td_col_class+" align-bottom text-center bg-light th\" id=\""+row+"-"+col+"\">"+colHTML+"</td>\n";
                     td_col_class = '';
                 }
             }
@@ -566,7 +595,7 @@ function newGame(){
                 if (col % 5 == 0){ td_col_class += 'td_c_5 '; }
 
                 if (col == 0){ // header column
-                    out += "<td class=\""+td_row_class+" "+td_col_class+" text-right bg-light th\" style=\"width: 110px;\">"+rowHTML+"&nbsp;</td>\n";
+                    out += "<td class=\""+td_row_class+" "+td_col_class+" text-right bg-light th\" id=\""+row+"-"+col+"\" style=\"width: 110px;\">"+rowHTML+"&nbsp;</td>\n";
                     td_col_class = '';
                 }
                 else {
