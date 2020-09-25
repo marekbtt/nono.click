@@ -1,0 +1,27 @@
+{
+  "name": "nono.click",
+  "version": "0.5.0",
+  "description": "https://nono.click",
+  "main": "app.js",
+  "scripts": {
+    "devstart": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marekbtt/nono.click.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marekbtt/nono.click/issues"
+  },
+  "homepage": "https://github.com/marekbtt/nono.click",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
